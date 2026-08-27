@@ -1,30 +1,29 @@
+import { env } from "./config/env.js";
 import { createApp } from "./app.js";
+import { logger } from "./utils/logger.js";
 
-const DEFAULT_PORT = 3000;
+const app = createApp();
 
-const parsedPort = Number.parseInt(
-    process.env.PORT ?? String(DEFAULT_PORT),
-    10,
-)
+const server = app.listen(env.PORT, () => {
+  logger.info("HTTP server started", {
+    port: env.PORT,
+    environment: env.NODE_ENV,
+  });
+});
 
-const port = Number.isNaN(parsedPort) ? DEFAULT_PORT : parsedPort;
-
-const app = createApp()
-
-const server = app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-})
-
-function shutdown(signal : string): void {
-  console.log(`${signal} received. Shutting down gracefully.`);
+function shutdown(signal: string): void {
+  logger.info("Shutdown signal received", { signal });
 
   server.close((error) => {
     if (error) {
-      console.error("Failed to close the HTTP server:", error);
+      logger.error("Failed to close HTTP server", {
+        message: error.message,
+      });
+
       process.exit(1);
     }
 
-    console.log("HTTP server closed.");
+    logger.info("HTTP server closed");
     process.exit(0);
   });
 }
@@ -35,4 +34,21 @@ process.on("SIGTERM", () => {
 
 process.on("SIGINT", () => {
   shutdown("SIGINT");
+});
+
+process.on("unhandledRejection", (reason: unknown) => {
+  logger.error("Unhandled promise rejection", {
+    reason: reason instanceof Error ? reason.message : String(reason),
+  });
+
+  shutdown("UNHANDLED_REJECTION");
+});
+
+process.on("uncaughtException", (error: Error) => {
+  logger.error("Uncaught exception", {
+    message: error.message,
+    stack: error.stack,
+  });
+
+  shutdown("UNCAUGHT_EXCEPTION");
 });
