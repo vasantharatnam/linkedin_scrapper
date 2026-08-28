@@ -13,6 +13,14 @@ const environmentSchema = z.object({
     LOG_LEVEL: z
         .enum(["debug", "info", "warn", "error"])
         .default("info"),
+
+    LINKEDIN_BASE_URL: z
+                     .string()
+                     .url()
+                     .default("https://www.linkedin.com"),
+
+    LINKEDIN_REQUEST_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(15_000)
+         
 });
 
 
