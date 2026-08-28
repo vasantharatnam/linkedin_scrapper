@@ -9,7 +9,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
-    "verify:schema": "tsx src/scripts/verify-profile-schema.ts"
+    "verify:schema": "tsx src/scripts/verify-profile-schema.ts",
+    "verify:url": "tsx src/scripts/verify-linkedin-url.ts"
   },
   "keywords": [
     "linkedin",

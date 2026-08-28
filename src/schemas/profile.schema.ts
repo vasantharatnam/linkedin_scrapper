@@ -62,9 +62,17 @@ export const linkedinProfileSchema = z.object({
 });
 
 
-export const scrapeProfileRequestSchema = z.object({
-    linkedinUrl: z.string().trim().min(1 , "linkedinUrl is required"),
-}).strict()
+export const scrapeProfileRequestSchema = z
+  .object({
+    linkedinUrl: z
+      .string({
+        error: "linkedinUrl must be a string",
+      })
+      .trim()
+      .min(1, "linkedinUrl is required")
+      .max(500, "linkedinUrl must not exceed 500 characters"),
+  })
+  .strict();
 
 
 export const scrapeProfileResponseSchema = z.object({
