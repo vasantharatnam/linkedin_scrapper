@@ -55,6 +55,10 @@ const environmentSchema = z.object({
     )
     .default("en_US"),
 
+    LINKEDIN_PROFILE_ENDPOINT_CONFIG_JSON: optionalSecretSchema(2),
+
+    LINKEDIN_SKILLS_ENDPOINT_CONFIG_JSON: optionalSecretSchema(2),
+
 });
 
 
