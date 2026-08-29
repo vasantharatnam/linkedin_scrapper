@@ -15,7 +15,8 @@
     "verify:auth": "tsx src/scripts/verify-linkedin-auth.ts",
     "fixtures:sanitize": "tsx src/scripts/sanitize-linkedin-fixture.ts",
     "verify:fixtures": "tsx src/scripts/verify-fixtures.ts",
-    "verify:endpoints": "tsx src/scripts/verify-linkedin-endpoints.ts"
+    "verify:endpoints": "tsx src/scripts/verify-linkedin-endpoints.ts",
+    "verify:normalized-response": "tsx src/scripts/verify-linkedin-normalized-response.ts"
   },
   "keywords": [
     "linkedin",
