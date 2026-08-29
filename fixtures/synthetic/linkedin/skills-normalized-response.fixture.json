@@ -1,0 +1,34 @@
+{
+  "fixtureMeta": {
+    "synthetic": true,
+    "description": "Synthetic LinkedIn normalized skills response shape for local tests."
+  },
+  "response": {
+    "data": {
+      "$type": "com.linkedin.restli.common.CollectionResponse",
+      "elements": [
+        "urn:li:fsd_skill:synthetic-typescript",
+        "urn:li:fsd_skill:synthetic-api-design"
+      ],
+      "paging": {
+        "count": 2,
+        "start": 0,
+        "total": 2
+      }
+    },
+    "included": [
+      {
+        "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+        "entityUrn": "urn:li:fsd_skill:synthetic-typescript",
+        "name": "TypeScript",
+        "endorsementCount": 42
+      },
+      {
+        "$type": "com.linkedin.voyager.dash.identity.profile.Skill",
+        "entityUrn": "urn:li:fsd_skill:synthetic-api-design",
+        "name": "API Design",
+        "endorsementCount": null
+      }
+    ]
+  }
+}

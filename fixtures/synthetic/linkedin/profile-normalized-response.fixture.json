@@ -1,0 +1,160 @@
+{
+  "fixtureMeta": {
+    "synthetic": true,
+    "description": "Synthetic LinkedIn normalized profile response shape for local tests."
+  },
+  "response": {
+    "data": {
+      "$type": "com.linkedin.voyager.dash.identity.profile.Profile",
+      "entityUrn": "urn:li:fsd_profile:ACoSYNTHETIC_PROFILE",
+      "publicIdentifier": "example-profile",
+      "firstName": "Example",
+      "lastName": "Person",
+      "headline": "Synthetic Product Engineering Lead",
+      "summary": "Synthetic profile summary for fixture coverage.",
+      "geoLocationName": "Example City, Example Region",
+      "profilePicture": {
+        "displayImageReference": {
+          "vectorImage": "urn:li:digitalmediaAsset:synthetic-profile-photo"
+        }
+      },
+      "backgroundPicture": {
+        "displayImageReference": {
+          "vectorImage": "urn:li:digitalmediaAsset:synthetic-background-photo"
+        }
+      },
+      "followingState": {
+        "followerCount": 1234
+      },
+      "connections": {
+        "count": 500
+      },
+      "positionGroupView": {
+        "elements": [
+          "urn:li:fsd_profilePositionGroup:synthetic-position-group"
+        ]
+      },
+      "educationView": {
+        "elements": [
+          "urn:li:fsd_profileEducation:synthetic-education"
+        ]
+      }
+    },
+    "included": [
+      {
+        "$type": "com.linkedin.common.VectorImage",
+        "entityUrn": "urn:li:digitalmediaAsset:synthetic-profile-photo",
+        "rootUrl": "https://media.licdn.com/dms/image/synthetic-profile-photo/",
+        "artifacts": [
+          {
+            "fileIdentifyingUrlPathSegment": "profile-200_200/example-image.jpg",
+            "width": 200,
+            "height": 200
+          }
+        ]
+      },
+      {
+        "$type": "com.linkedin.common.VectorImage",
+        "entityUrn": "urn:li:digitalmediaAsset:synthetic-background-photo",
+        "rootUrl": "https://media.licdn.com/dms/image/synthetic-background-photo/",
+        "artifacts": [
+          {
+            "fileIdentifyingUrlPathSegment": "background-800_200/example-image.jpg",
+            "width": 800,
+            "height": 200
+          }
+        ]
+      },
+      {
+        "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup",
+        "entityUrn": "urn:li:fsd_profilePositionGroup:synthetic-position-group",
+        "profilePositionInPositionGroup": {
+          "elements": [
+            "urn:li:fsd_profilePosition:synthetic-position"
+          ]
+        }
+      },
+      {
+        "$type": "com.linkedin.voyager.dash.identity.profile.Position",
+        "entityUrn": "urn:li:fsd_profilePosition:synthetic-position",
+        "title": "Engineering Lead",
+        "companyName": "Example Systems",
+        "companyUrn": "urn:li:fsd_company:synthetic-company",
+        "employmentType": "Full-time",
+        "locationName": "Example City",
+        "description": "Synthetic role description for fixture coverage.",
+        "dateRange": {
+          "start": {
+            "month": 1,
+            "year": 2020
+          },
+          "end": null
+        }
+      },
+      {
+        "$type": "com.linkedin.voyager.dash.organization.Company",
+        "entityUrn": "urn:li:fsd_company:synthetic-company",
+        "name": "Example Systems",
+        "url": "https://www.linkedin.com/company/example-systems/",
+        "logo": {
+          "displayImageReference": {
+            "vectorImage": "urn:li:digitalmediaAsset:synthetic-company-logo"
+          }
+        }
+      },
+      {
+        "$type": "com.linkedin.common.VectorImage",
+        "entityUrn": "urn:li:digitalmediaAsset:synthetic-company-logo",
+        "rootUrl": "https://media.licdn.com/dms/image/synthetic-company-logo/",
+        "artifacts": [
+          {
+            "fileIdentifyingUrlPathSegment": "company-100_100/example-image.jpg",
+            "width": 100,
+            "height": 100
+          }
+        ]
+      },
+      {
+        "$type": "com.linkedin.voyager.dash.identity.profile.Education",
+        "entityUrn": "urn:li:fsd_profileEducation:synthetic-education",
+        "schoolName": "Example University",
+        "schoolUrn": "urn:li:fsd_school:synthetic-school",
+        "degreeName": "Bachelor of Example Studies",
+        "fieldOfStudy": "Synthetic Systems",
+        "grade": "Example Honors",
+        "description": "Synthetic education description for fixture coverage.",
+        "dateRange": {
+          "start": {
+            "year": 2014
+          },
+          "end": {
+            "year": 2018
+          }
+        }
+      },
+      {
+        "$type": "com.linkedin.voyager.dash.organization.School",
+        "entityUrn": "urn:li:fsd_school:synthetic-school",
+        "name": "Example University",
+        "url": "https://www.linkedin.com/school/example-university/",
+        "logo": {
+          "displayImageReference": {
+            "vectorImage": "urn:li:digitalmediaAsset:synthetic-school-logo"
+          }
+        }
+      },
+      {
+        "$type": "com.linkedin.common.VectorImage",
+        "entityUrn": "urn:li:digitalmediaAsset:synthetic-school-logo",
+        "rootUrl": "https://media.licdn.com/dms/image/synthetic-school-logo/",
+        "artifacts": [
+          {
+            "fileIdentifyingUrlPathSegment": "school-100_100/example-image.jpg",
+            "width": 100,
+            "height": 100
+          }
+        ]
+      }
+    ]
+  }
+}
