@@ -1,5 +1,23 @@
 import "dotenv/config"
 import { z } from "zod";
+import { tr } from "zod/locales";
+
+
+function optionalSecretSchema(minimumLength: number){
+    return z.preprocess(
+         (value) => {
+            if (typeof value !== "string"){
+                return value;
+            }
+
+            const trimmedValue = value.trim();
+
+            return trimmedValue.length === 0 ? undefined : trimmedValue;
+         },
+
+         z.string().min(minimumLength).optional(),
+    );
+}
 
 const environmentSchema = z.object({
     NODE_ENV: z
@@ -19,8 +37,24 @@ const environmentSchema = z.object({
                      .url()
                      .default("https://www.linkedin.com"),
 
-    LINKEDIN_REQUEST_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(15_000)
-         
+    LINKEDIN_REQUEST_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(15_000),
+    
+    LINKEDIN_LI_AT: optionalSecretSchema(10),
+
+    LINKEDIN_JSESSIONID: optionalSecretSchema(5),
+
+    LINKEDIN_USER_AGENT : z.string().min(10).default(
+       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
+      "AppleWebKit/537.36 (KHTML, like Gecko) " +
+      "Chrome/150.0.0.0 Safari/537.36",
+    ),
+
+    LINKEDIN_LANGUAGE: z.string().regex(
+         /^[a-z]{2}_[A-Z]{2}$/,
+    "LINKEDIN_LANGUAGE must use a format such as en_US",
+    )
+    .default("en_US"),
+
 });
 
 

@@ -8,6 +8,20 @@ interface ExampleResponse {
 let capturedUrl: string | null = null;
 let capturedMethod: string | null = null;
 
+
+let capturedCookie: string | null = null;
+let capturedCsrfToken: string | null = null;
+let capturedProtocolVersion: string | null = null;
+
+const mockAuthHeadersProvider = (): Record<string, string> => ({
+  accept: "application/vnd.linkedin.normalized+json+2.1",
+  cookie: 'li_at=test-session; JSESSIONID="ajax:test-csrf"',
+  "csrf-token": "ajax:test-csrf",
+  "x-restli-protocol-version": "2.0.0",
+  "x-li-lang": "en_US",
+  "user-agent": "LinkedIn HTTP Client Verification",
+});
+
 const successfulFetch: typeof fetch = async (
   input,
   init,
@@ -16,6 +30,14 @@ const successfulFetch: typeof fetch = async (
     input instanceof URL ? input.toString() : String(input);
 
   capturedMethod = init?.method ?? "GET";
+
+  const headers = new Headers(init?.headers);
+
+capturedCookie = headers.get("cookie");
+capturedCsrfToken = headers.get("csrf-token");
+capturedProtocolVersion = headers.get(
+  "x-restli-protocol-version",
+);
 
   return new Response(
     JSON.stringify({
@@ -34,6 +56,7 @@ const successfulClient = new DefaultLinkedinHttpClient({
   baseUrl: "https://www.linkedin.com",
   timeoutMs: 5_000,
   fetchImplementation: successfulFetch,
+  authHeadersProvider: mockAuthHeadersProvider,
 });
 
 const result = await successfulClient.get<ExampleResponse>(
@@ -57,6 +80,21 @@ if (result.data.message !== "mock response") {
 
 if (capturedMethod !== "GET") {
   throw new Error(`Expected GET, received ${capturedMethod}`);
+}
+
+if (
+  capturedCookie !==
+  'li_at=test-session; JSESSIONID="ajax:test-csrf"'
+) {
+  throw new Error("Expected LinkedIn session cookies");
+}
+
+if (capturedCsrfToken !== "ajax:test-csrf") {
+  throw new Error("Expected LinkedIn CSRF token");
+}
+
+if (capturedProtocolVersion !== "2.0.0") {
+  throw new Error("Expected LinkedIn Rest.li protocol version");
 }
 
 const expectedUrl =
@@ -84,6 +122,7 @@ const unauthorizedFetch: typeof fetch = async () =>
 
 const unauthorizedClient = new DefaultLinkedinHttpClient({
   fetchImplementation: unauthorizedFetch,
+  authHeadersProvider: mockAuthHeadersProvider,
 });
 
 try {

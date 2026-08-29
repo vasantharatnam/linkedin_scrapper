@@ -7,6 +7,8 @@ import type {
 } from "../types/linkedin-http.types.js";
 import { AppError } from "../utils/app-error.js";
 import { logger } from "../utils/logger.js";
+import { getLinkedinAuthHeaders } from "../auth/linkedin-auth.js";
+import type { LinkedinAuthHeadersProvider } from "../types/linkedin-auth.types.js";
 
 type FetchImplementation = typeof fetch;
 
@@ -14,6 +16,8 @@ interface DefaultLinkedinHttpClientOptions {
   baseUrl?: string;
   timeoutMs?: number;
   fetchImplementation?: FetchImplementation;
+  authHeadersProvider?: LinkedinAuthHeadersProvider;
+  
 }
 
 export class DefaultLinkedinHttpClient
@@ -22,6 +26,7 @@ export class DefaultLinkedinHttpClient
   private readonly baseUrl: URL;
   private readonly timeoutMs: number;
   private readonly fetchImplementation: FetchImplementation;
+  private readonly authHeadersProvider: LinkedinAuthHeadersProvider;
 
   constructor(options: DefaultLinkedinHttpClientOptions = {}) {
     this.baseUrl = new URL(
@@ -33,6 +38,9 @@ export class DefaultLinkedinHttpClient
 
     this.fetchImplementation =
       options.fetchImplementation ?? globalThis.fetch;
+    
+    this.authHeadersProvider =
+    options.authHeadersProvider ?? getLinkedinAuthHeaders;
   }
 
   async get<T>(
@@ -59,9 +67,11 @@ export class DefaultLinkedinHttpClient
 
     const method = options.method ?? "GET";
 
+    const authenticationHeaders = this.authHeadersProvider();
+
     const headers = new Headers({
-      accept: "application/json",
-      ...options.headers,
+     ...authenticationHeaders,
+     ...options.headers,
     });
 
     let serializedBody: string | undefined;

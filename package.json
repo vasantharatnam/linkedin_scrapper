@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "verify:schema": "tsx src/scripts/verify-profile-schema.ts",
     "verify:url": "tsx src/scripts/verify-linkedin-url.ts",
-    "verify:http-client": "tsx src/scripts/verify-linkedin-http-client.ts"
+    "verify:http-client": "tsx src/scripts/verify-linkedin-http-client.ts",
+    "verify:auth": "tsx src/scripts/verify-linkedin-auth.ts"
   },
   "keywords": [
     "linkedin",
