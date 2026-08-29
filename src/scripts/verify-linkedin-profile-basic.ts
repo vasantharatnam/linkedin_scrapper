@@ -65,12 +65,8 @@ if (profile.currentCompany !== "Example Systems") {
   throw new Error("Expected current company to be normalized");
 }
 
-if (
-  profile.experience.length !== 0 ||
-  profile.education.length !== 0 ||
-  profile.skills.length !== 0
-) {
-  throw new Error("Expected deferred sections to remain empty arrays");
+if (profile.skills.length !== 0) {
+  throw new Error("Expected skills to remain an empty array");
 }
 
 console.log("LinkedIn basic profile normalization passed.");

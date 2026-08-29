@@ -1,5 +1,8 @@
 import {
   linkedinProfileSchema,
+  type DateRange,
+  type Education,
+  type Experience,
   type LinkedinProfile,
 } from "../schemas/index.js";
 import type { ParsedLinkedinProfileUrl } from "../types/linkedin-url.types.js";
@@ -15,6 +18,7 @@ import {
   readUrnReference,
   readUrnReferences,
   type IncludedEntityIndex,
+  type LinkedinNormalizedEntity,
 } from "./normalized-response.js";
 
 interface BasicProfileNormalizerOptions {
@@ -130,6 +134,172 @@ function getCurrentCompany(
   return null;
 }
 
+function normalizeDateRange(
+  value: unknown,
+): DateRange {
+  const dateRange = asRecord(value);
+  const start = readRecord(dateRange, "start");
+  const end = readRecord(dateRange, "end");
+
+  return {
+    startMonth: normalizeIntegerCount(readNumber(start, "month")),
+    startYear: normalizeIntegerCount(readNumber(start, "year")),
+    endMonth: normalizeIntegerCount(readNumber(end, "month")),
+    endYear: normalizeIntegerCount(readNumber(end, "year")),
+    isCurrent: Boolean(start) && !end,
+  };
+}
+
+function normalizeLinkedinUrl(value: string | null): string | null {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(value);
+
+    return parsedUrl.protocol === "https:" ? parsedUrl.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function getEntityByUrn(
+  includedIndex: IncludedEntityIndex,
+  entityUrn: string | null,
+): Record<string, unknown> | null {
+  return asRecord(getIncludedEntity(includedIndex, entityUrn));
+}
+
+function resolveCompany(
+  position: Record<string, unknown> | null,
+  includedIndex: IncludedEntityIndex,
+): Record<string, unknown> | null {
+  return getEntityByUrn(
+    includedIndex,
+    readString(position, "companyUrn") ??
+      readUrnReference(readRecord(position, "company")),
+  );
+}
+
+function resolveSchool(
+  education: Record<string, unknown> | null,
+  includedIndex: IncludedEntityIndex,
+): Record<string, unknown> | null {
+  return getEntityByUrn(
+    includedIndex,
+    readString(education, "schoolUrn") ??
+      readUrnReference(readRecord(education, "school")),
+  );
+}
+
+function normalizeExperience(
+  position: LinkedinNormalizedEntity,
+  includedIndex: IncludedEntityIndex,
+): Experience {
+  const positionRecord = asRecord(position);
+  const company = resolveCompany(positionRecord, includedIndex);
+
+  return {
+    title: readString(positionRecord, "title"),
+    companyName:
+      readString(positionRecord, "companyName") ??
+      readString(company, "name"),
+    companyLinkedinUrl: normalizeLinkedinUrl(
+      readString(company, "url"),
+    ),
+    companyLogoUrl: resolveVectorImageUrl(
+      readRecord(company, "logo"),
+      includedIndex,
+    ),
+    employmentType: readString(positionRecord, "employmentType"),
+    location:
+      readString(positionRecord, "locationName") ??
+      readString(positionRecord, "location"),
+    description: readString(positionRecord, "description"),
+    dateRange: normalizeDateRange(
+      readRecord(positionRecord, "dateRange"),
+    ),
+  };
+}
+
+function normalizeExperienceSection(
+  profileRecord: Record<string, unknown> | null,
+  includedIndex: IncludedEntityIndex,
+): Experience[] {
+  const positionGroupUrns = readUrnReferences(
+    readArray(readRecord(profileRecord, "positionGroupView"), "elements"),
+  );
+
+  return positionGroupUrns.flatMap((positionGroupUrn) => {
+    const positionGroup = asRecord(
+      getIncludedEntity(includedIndex, positionGroupUrn),
+    );
+    const positionUrns = readUrnReferences(
+      readArray(
+        readRecord(
+          positionGroup,
+          "profilePositionInPositionGroup",
+        ),
+        "elements",
+      ),
+    );
+
+    return positionUrns.flatMap((positionUrn) => {
+      const position = getIncludedEntity(includedIndex, positionUrn);
+
+      return position
+        ? [normalizeExperience(position, includedIndex)]
+        : [];
+    });
+  });
+}
+
+function normalizeEducation(
+  education: LinkedinNormalizedEntity,
+  includedIndex: IncludedEntityIndex,
+): Education {
+  const educationRecord = asRecord(education);
+  const school = resolveSchool(educationRecord, includedIndex);
+
+  return {
+    collegeName:
+      readString(educationRecord, "schoolName") ??
+      readString(school, "name"),
+    collegeLinkedinUrl: normalizeLinkedinUrl(
+      readString(school, "url"),
+    ),
+    collegeLogoUrl: resolveVectorImageUrl(
+      readRecord(school, "logo"),
+      includedIndex,
+    ),
+    degreeName: readString(educationRecord, "degreeName"),
+    fieldOfStudy: readString(educationRecord, "fieldOfStudy"),
+    grade: readString(educationRecord, "grade"),
+    description: readString(educationRecord, "description"),
+    dateRange: normalizeDateRange(
+      readRecord(educationRecord, "dateRange"),
+    ),
+  };
+}
+
+function normalizeEducationSection(
+  profileRecord: Record<string, unknown> | null,
+  includedIndex: IncludedEntityIndex,
+): Education[] {
+  const educationUrns = readUrnReferences(
+    readArray(readRecord(profileRecord, "educationView"), "elements"),
+  );
+
+  return educationUrns.flatMap((educationUrn) => {
+    const education = getIncludedEntity(includedIndex, educationUrn);
+
+    return education
+      ? [normalizeEducation(education, includedIndex)]
+      : [];
+  });
+}
+
 export function normalizeLinkedinBasicProfile({
   profileUrl,
   response,
@@ -185,8 +355,14 @@ export function normalizeLinkedinBasicProfile({
       includedIndex,
     ),
 
-    experience: [],
-    education: [],
+    experience: normalizeExperienceSection(
+      profileRecord,
+      includedIndex,
+    ),
+    education: normalizeEducationSection(
+      profileRecord,
+      includedIndex,
+    ),
     skills: [],
   };
 

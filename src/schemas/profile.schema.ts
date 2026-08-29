@@ -13,10 +13,10 @@ export const experienceSchema = z.object({
     companyName:   z.string().nullable(),
     companyLinkedinUrl: z.string().url().nullable(),
     companyLogoUrl: z.string().url().nullable(),
-    empolymentType: z.string().nullable(),
+    employmentType: z.string().nullable(),
     location: z.string().nullable(),
     description: z.string().nullable(),
-    dataRange: dateRangeSchema,
+    dateRange: dateRangeSchema,
 })
 
 export const educationSchema = z.object({

@@ -33,8 +33,44 @@ const profileResult = linkedinProfileSchema.safeParse({
 
   currentCompany: "Example Company",
 
-  experience: [],
-  education: [],
+  experience: [
+    {
+      title: "Engineering Lead",
+      companyName: "Example Systems",
+      companyLinkedinUrl:
+        "https://www.linkedin.com/company/example-systems/",
+      companyLogoUrl: null,
+      employmentType: "Full-time",
+      location: "Example City",
+      description: "Synthetic role description.",
+      dateRange: {
+        startMonth: 1,
+        startYear: 2020,
+        endMonth: null,
+        endYear: null,
+        isCurrent: true,
+      },
+    },
+  ],
+  education: [
+    {
+      collegeName: "Example University",
+      collegeLinkedinUrl:
+        "https://www.linkedin.com/school/example-university/",
+      collegeLogoUrl: null,
+      degreeName: "Bachelor of Example Studies",
+      fieldOfStudy: "Synthetic Systems",
+      grade: "Example Honors",
+      description: "Synthetic education description.",
+      dateRange: {
+        startMonth: null,
+        startYear: 2014,
+        endMonth: null,
+        endYear: 2018,
+        isCurrent: false,
+      },
+    },
+  ],
   skills: [],
 });
 
