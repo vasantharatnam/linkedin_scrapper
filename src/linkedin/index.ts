@@ -3,3 +3,4 @@ export * from "./internal-endpoint-config.js";
 export * from "./internal-endpoint.types.js";
 export * from "./normalized-response.js";
 export * from "./profile-basic-normalizer.js";
+export * from "./skills-limitation.js";

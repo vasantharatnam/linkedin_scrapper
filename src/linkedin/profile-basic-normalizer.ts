@@ -24,6 +24,7 @@ import {
 interface BasicProfileNormalizerOptions {
   profileUrl: ParsedLinkedinProfileUrl;
   response: unknown;
+  skillsResponse?: unknown;
 }
 
 function normalizeFullName(
@@ -300,9 +301,42 @@ function normalizeEducationSection(
   });
 }
 
+export function normalizeLinkedinSkills(
+  response: unknown,
+): LinkedinProfile["skills"] {
+  const normalizedResponse =
+    parseLinkedinNormalizedResponse(response);
+  const includedIndex = createIncludedEntityIndex(
+    normalizedResponse.included,
+  );
+  const collection = asRecord(normalizedResponse.data);
+  const skillUrns = readUrnReferences(
+    readArray(collection, "elements"),
+  );
+
+  return skillUrns.flatMap((skillUrn) => {
+    const skill = asRecord(getIncludedEntity(includedIndex, skillUrn));
+    const name = readString(skill, "name");
+
+    if (!name) {
+      return [];
+    }
+
+    return [
+      {
+        name,
+        endorsementCount: normalizeIntegerCount(
+          readNumber(skill, "endorsementCount"),
+        ),
+      },
+    ];
+  });
+}
+
 export function normalizeLinkedinBasicProfile({
   profileUrl,
   response,
+  skillsResponse,
 }: BasicProfileNormalizerOptions): LinkedinProfile {
   const normalizedResponse =
     parseLinkedinNormalizedResponse(response);
@@ -363,7 +397,10 @@ export function normalizeLinkedinBasicProfile({
       profileRecord,
       includedIndex,
     ),
-    skills: [],
+    skills:
+      skillsResponse === undefined
+        ? []
+        : normalizeLinkedinSkills(skillsResponse),
   };
 
   return linkedinProfileSchema.parse(profile);

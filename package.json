@@ -18,7 +18,8 @@
     "verify:endpoints": "tsx src/scripts/verify-linkedin-endpoints.ts",
     "verify:normalized-response": "tsx src/scripts/verify-linkedin-normalized-response.ts",
     "verify:profile-basic": "tsx src/scripts/verify-linkedin-profile-basic.ts",
-    "verify:profile-sections": "tsx src/scripts/verify-linkedin-profile-sections.ts"
+    "verify:profile-sections": "tsx src/scripts/verify-linkedin-profile-sections.ts",
+    "verify:profile-skills": "tsx src/scripts/verify-linkedin-profile-skills.ts"
   },
   "keywords": [
     "linkedin",
