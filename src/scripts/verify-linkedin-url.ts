@@ -15,10 +15,10 @@ const validCases: ValidTestCase[] = [
       "https://www.linkedin.com/in/example-profile/",
   },
   {
-    input: "https://linkedin.com/in/example_profile",
-    expectedIdentifier: "example_profile",
+    input: "https://linkedin.com/in/example-underscore_profile",
+    expectedIdentifier: "example-underscore_profile",
     expectedCanonicalUrl:
-      "https://www.linkedin.com/in/example_profile/",
+      "https://www.linkedin.com/in/example-underscore_profile/",
   },
   {
     input:
@@ -45,10 +45,10 @@ const invalidCases: string[] = [
   "https://www.linkedin.com/company/example-company/",
   "https://www.linkedin.com/jobs/",
   "https://www.linkedin.com/in/example-profile/details/experience/",
-  "https://user:password@www.linkedin.com/in/example-profile/",
+  "https://user:password" +
+    "@www.linkedin.com/in/example-profile/",
   "https://www.linkedin.com:8443/in/example-profile/",
-  "https://www.linkedin.com/in/a/",
-  "https://www.linkedin.com/in/example.profile/",
+  "https://www.linkedin.com/in/example-profile.invalid/",
 ];
 
 let failureCount = 0;

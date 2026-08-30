@@ -26,7 +26,8 @@
     "verify:api-key-auth": "tsx src/scripts/verify-api-key-auth.ts",
     "verify:cache-rate-limit": "tsx src/scripts/verify-cache-rate-limit.ts",
     "verify:openapi": "tsx src/scripts/verify-openapi.ts",
-    "verify:deployment": "tsx src/scripts/verify-deployment.ts"
+    "verify:deployment": "tsx src/scripts/verify-deployment.ts",
+    "verify:repository-safety": "tsx src/scripts/verify-repository-safety.ts"
   },
   "keywords": [
     "linkedin",

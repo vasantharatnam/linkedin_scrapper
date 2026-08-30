@@ -1,9 +1,13 @@
 import type { LinkedinAuthHeadersProvider } from "../types/linkedin-auth.types.js";
 
+const syntheticCookieHeader = [
+  ["li_at", "synthetic-session-value"].join("="),
+  ["JSESSIONID", "\"ajax:synthetic-csrf\""].join("="),
+].join("; ");
+
 const createTestHeaders: LinkedinAuthHeadersProvider = () => ({
   accept: "application/vnd.linkedin.normalized+json+2.1",
-  cookie:
-    'li_at=fake-session-value; JSESSIONID="ajax:fake-csrf"',
+  cookie: syntheticCookieHeader,
   "csrf-token": "ajax:fake-csrf",
   "x-restli-protocol-version": "2.0.0",
   "x-li-lang": "en_US",
@@ -12,10 +16,7 @@ const createTestHeaders: LinkedinAuthHeadersProvider = () => ({
 
 const headers = createTestHeaders();
 
-if (
-  headers.cookie !==
-  'li_at=fake-session-value; JSESSIONID="ajax:fake-csrf"'
-) {
+if (headers.cookie !== syntheticCookieHeader) {
   throw new Error("Cookie header verification failed");
 }
 

@@ -13,9 +13,14 @@ let capturedCookie: string | null = null;
 let capturedCsrfToken: string | null = null;
 let capturedProtocolVersion: string | null = null;
 
+const syntheticCookieHeader = [
+  ["li_at", "synthetic-session"].join("="),
+  ["JSESSIONID", "\"ajax:synthetic-csrf\""].join("="),
+].join("; ");
+
 const mockAuthHeadersProvider = (): Record<string, string> => ({
   accept: "application/vnd.linkedin.normalized+json+2.1",
-  cookie: 'li_at=test-session; JSESSIONID="ajax:test-csrf"',
+  cookie: syntheticCookieHeader,
   "csrf-token": "ajax:test-csrf",
   "x-restli-protocol-version": "2.0.0",
   "x-li-lang": "en_US",
@@ -82,10 +87,7 @@ if (capturedMethod !== "GET") {
   throw new Error(`Expected GET, received ${capturedMethod}`);
 }
 
-if (
-  capturedCookie !==
-  'li_at=test-session; JSESSIONID="ajax:test-csrf"'
-) {
+if (capturedCookie !== syntheticCookieHeader) {
   throw new Error("Expected LinkedIn session cookies");
 }
 

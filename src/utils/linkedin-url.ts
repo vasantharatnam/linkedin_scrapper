@@ -88,7 +88,7 @@ export function parseLinkedinProfileUrl(
       "URL must point directly to a LinkedIn member profile",
       {
         expectedFormat:
-          "https://www.linkedin.com/in/public-identifier/",
+          "https://www.linkedin.com/in/example-profile/",
       },
     );
   }

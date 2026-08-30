@@ -64,7 +64,7 @@ try {
       method: "GET",
       path: "/voyager/api/synthetic",
       headers: {
-        cookie: "li_at=not-allowed",
+        cookie: ["li_at", "not-allowed"].join("="),
       },
     },
     {

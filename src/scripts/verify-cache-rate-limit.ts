@@ -151,7 +151,8 @@ let failureNextError: unknown = null;
 await failingController(
   {
     body: {
-      linkedinUrl: "https://www.linkedin.com/in/no-cache-failure/",
+      linkedinUrl:
+        "https://www.linkedin.com/in/example-no-cache-failure/",
     },
   } as unknown as Request,
   createResponse(firstApiKeyScope).response,
