@@ -22,7 +22,8 @@
     "verify:profile-skills": "tsx src/scripts/verify-linkedin-profile-skills.ts",
     "verify:profile-service": "tsx src/scripts/verify-linkedin-profile-service.ts",
     "verify:profile-route": "tsx src/scripts/verify-profile-route.ts",
-    "verify:api-key-auth": "tsx src/scripts/verify-api-key-auth.ts"
+    "verify:api-key-auth": "tsx src/scripts/verify-api-key-auth.ts",
+    "verify:cache-rate-limit": "tsx src/scripts/verify-cache-rate-limit.ts"
   },
   "keywords": [
     "linkedin",

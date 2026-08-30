@@ -1,9 +1,13 @@
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 
+import { TtlCache } from "../cache/ttl-cache.js";
 import { createScrapeProfileController } from "../controllers/profile.controller.js";
 import { normalizeLinkedinBasicProfile } from "../linkedin/index.js";
-import type { ScrapeProfileResponse } from "../schemas/index.js";
+import type {
+  LinkedinProfile,
+  ScrapeProfileResponse,
+} from "../schemas/index.js";
 import { ErrorCode } from "../types/error.types.js";
 import { AppError } from "../utils/app-error.js";
 import { parseLinkedinProfileUrl } from "../utils/linkedin-url.js";
@@ -32,6 +36,9 @@ function createMockResponse() {
   };
 
   const response = {
+    locals: {
+      apiKeyScope: "synthetic-api-key-scope",
+    },
     status(statusCode: number) {
       state.statusCode = statusCode;
 
@@ -42,7 +49,7 @@ function createMockResponse() {
 
       return this;
     },
-  } as Response<ScrapeProfileResponse>;
+  } as unknown as Response<ScrapeProfileResponse>;
 
   return {
     response,
@@ -53,10 +60,16 @@ function createMockResponse() {
 let requestedUrl: string | null = null;
 
 const controller = createScrapeProfileController({
-  async retrieveProfile({ linkedinUrl }) {
-    requestedUrl = linkedinUrl;
+  cache: new TtlCache<string, LinkedinProfile>({
+    maxEntries: 10,
+    ttlMs: 1_000,
+  }),
+  service: {
+    async retrieveProfile({ linkedinUrl }) {
+      requestedUrl = linkedinUrl;
 
-    return profile;
+      return profile;
+    },
   },
 });
 
@@ -123,8 +136,14 @@ const upstreamError = new AppError({
 });
 
 const failingController = createScrapeProfileController({
-  async retrieveProfile() {
-    throw upstreamError;
+  cache: new TtlCache<string, LinkedinProfile>({
+    maxEntries: 10,
+    ttlMs: 1_000,
+  }),
+  service: {
+    async retrieveProfile() {
+      throw upstreamError;
+    },
   },
 });
 

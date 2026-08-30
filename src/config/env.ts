@@ -59,6 +59,14 @@ const environmentSchema = z.object({
 
     LINKEDIN_SKILLS_ENDPOINT_CONFIG_JSON: optionalSecretSchema(2),
 
+    PROFILE_CACHE_TTL_MS: z.coerce.number().int().min(0).max(3_600_000).default(300_000),
+
+    PROFILE_CACHE_MAX_ENTRIES: z.coerce.number().int().min(1).max(10_000).default(500),
+
+    API_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().min(1_000).max(3_600_000).default(60_000),
+
+    API_RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().min(1).max(10_000).default(60),
+
 });
 
 

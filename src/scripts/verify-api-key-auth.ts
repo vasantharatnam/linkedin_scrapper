@@ -31,8 +31,10 @@ async function runMiddleware(
           ? apiKey
           : undefined;
       },
-    } as Request;
-    const response = {} as Response;
+    } as unknown as Request;
+    const response = {
+      locals: {},
+    } as unknown as Response;
     const next: NextFunction = (error?: unknown) => {
       resolve(error ?? null);
     };

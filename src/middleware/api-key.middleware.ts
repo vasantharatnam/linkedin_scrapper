@@ -15,6 +15,12 @@ function digestApiKey(value: string): Buffer {
     .digest();
 }
 
+export function getApiKeyScope(
+  providedApiKey: string | undefined,
+): string {
+  return digestApiKey(providedApiKey ?? "").toString("hex");
+}
+
 export function isValidApiKey(
   providedApiKey: string | undefined,
   expectedApiKey = env.API_KEY,
@@ -27,10 +33,13 @@ export function isValidApiKey(
 
 export function requireApiKey(
   request: Request,
-  _response: Response,
+  response: Response,
   next: NextFunction,
 ): void {
   if (isValidApiKey(request.get(API_KEY_HEADER))) {
+    response.locals.apiKeyScope = getApiKeyScope(
+      request.get(API_KEY_HEADER),
+    );
     next();
     return;
   }
