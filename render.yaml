@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: linkedin-profile-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/v1/health
+    autoDeploy: false
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: LOG_LEVEL
+        value: info
+      - key: API_KEY
+        sync: false
+      - key: LINKEDIN_LI_AT
+        sync: false
+      - key: LINKEDIN_JSESSIONID
+        sync: false
+      - key: LINKEDIN_PROFILE_ENDPOINT_CONFIG_JSON
+        sync: false
+      - key: LINKEDIN_SKILLS_ENDPOINT_CONFIG_JSON
+        sync: false
+      - key: LINKEDIN_BASE_URL
+        value: https://www.linkedin.com
+      - key: LINKEDIN_REQUEST_TIMEOUT_MS
+        value: 15000
+      - key: LINKEDIN_LANGUAGE
+        value: en_US
+      - key: PROFILE_CACHE_TTL_MS
+        value: 300000
+      - key: PROFILE_CACHE_MAX_ENTRIES
+        value: 500
+      - key: API_RATE_LIMIT_WINDOW_MS
+        value: 60000
+      - key: API_RATE_LIMIT_MAX_REQUESTS
+        value: 60
