@@ -13,18 +13,18 @@ import {
 import { linkedinProfileRetrievalService } from "../services/index.js";
 import { parseLinkedinProfileUrl } from "../utils/linkedin-url.js";
 
-interface ProfileRetrievalService {
+export interface ProfileRetrievalService {
   retrieveProfile(options: {
     linkedinUrl: string;
   }): Promise<LinkedinProfile>;
 }
 
-interface ProfileCache {
+export interface ProfileCache {
   get(key: string): LinkedinProfile | undefined;
   set(key: string, value: LinkedinProfile): void;
 }
 
-interface ScrapeProfileControllerOptions {
+export interface ScrapeProfileControllerOptions {
   service?: ProfileRetrievalService;
   cache?: ProfileCache;
 }

@@ -1,0 +1,16 @@
+process.env.NODE_ENV = "test";
+process.env.PORT = "3000";
+process.env.API_KEY = "synthetic-test-api-key";
+process.env.LOG_LEVEL = "error";
+process.env.LINKEDIN_BASE_URL = "https://www.linkedin.com";
+process.env.LINKEDIN_REQUEST_TIMEOUT_MS = "5000";
+process.env.LINKEDIN_LI_AT = "";
+process.env.LINKEDIN_JSESSIONID = "";
+process.env.LINKEDIN_USER_AGENT = "Synthetic Test User Agent";
+process.env.LINKEDIN_LANGUAGE = "en_US";
+process.env.LINKEDIN_PROFILE_ENDPOINT_CONFIG_JSON = "";
+process.env.LINKEDIN_SKILLS_ENDPOINT_CONFIG_JSON = "";
+process.env.PROFILE_CACHE_TTL_MS = "300000";
+process.env.PROFILE_CACHE_MAX_ENTRIES = "100";
+process.env.API_RATE_LIMIT_WINDOW_MS = "60000";
+process.env.API_RATE_LIMIT_MAX_REQUESTS = "60";
